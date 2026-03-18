@@ -2,8 +2,9 @@
   "name": "api-de-tarefas-de-equipe",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "commonjs",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "node --watch src/config/database.js"
   },
   "keywords": [],
   "author": "",

@@ -1,5 +1,6 @@
 const db = require('../config/database')
-const user = db.Sequelize.define('Usuario', {
+const Task=require('../models/Task');
+const User = db.Sequelize.define('Usuario', {
     nome: {
         type: db.sequelize.STRING,
         allowNull: false,
@@ -16,9 +17,15 @@ const user = db.Sequelize.define('Usuario', {
 
 })
 
+User.hasMany(Task)
+Task.belongsTO(User,{
+constraints: true
+
+})
+
 try {
-    user.sync({ force: true })
+    User.sync()
    ;
 } catch (error) {
-    console.error('Não foi possível criar banco de dados:', error);
+    console.error('Erro ao sincronizar banco:', error);
 }

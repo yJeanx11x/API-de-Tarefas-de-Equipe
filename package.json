@@ -4,7 +4,7 @@
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
-    "dev": "node --watch src/config/database.js"
+    "dev": "node --watch src/app/server.js"
   },
   "keywords": [],
   "author": "",

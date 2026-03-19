@@ -1,5 +1,7 @@
-const db = require('../config/database')
-const Task=require('../models/Task');
+const db =require('../config/database')
+const Task = require('../models/Task');
+
+
 const User = db.Sequelize.define('Usuario', {
     nome: {
         type: db.sequelize.STRING,
@@ -18,14 +20,12 @@ const User = db.Sequelize.define('Usuario', {
 })
 
 User.hasMany(Task)
-Task.belongsTO(User,{
-constraints: true
-
-})
+Task.belongsTo(User)
 
 try {
-    User.sync()
-   ;
+   User.sync({ force: true })
+        
 } catch (error) {
     console.error('Erro ao sincronizar banco:', error);
 }
+module.exports = User

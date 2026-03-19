@@ -14,7 +14,4 @@ try {
     console.error('Não foi possível conectar ao banco de dados:', error);
 }
 
-module.exports = {
-    Sequelize: Sequelize,
-    sequelize: sequelize
-}
+module.exports ={ Sequelize, sequelize}

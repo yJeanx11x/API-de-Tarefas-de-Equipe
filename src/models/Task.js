@@ -1,5 +1,6 @@
 const db=require('../config/database')
-const task = db.Sequelize.define('tarefas', {
+
+const Task = db.Sequelize.define('tarefas', {
     titulo: {
         type: db.sequelize.STRING,
         allowNull: false,
@@ -9,9 +10,9 @@ const task = db.Sequelize.define('tarefas', {
         allowNull: false,
     },
     status: {
-        type: db.sequelize.BOLEAN,
+        type: db.sequelize.BOOLEAN,
         allowNull: false,
     }
 })
 
-module.exports=task
+module.exports= Task

@@ -9,8 +9,9 @@ async function CriarUser(req, res, next) {
     const z = validacao.safeParse(req.body)
   
     try {
-        const passwordHash =await bcrypt.hash(z.data.password, 12)
-        await User.create({
+        const passwordHash = await bcrypt.hash(z.data.password, 12)
+
+        await User.User.create({
             nome: z.data.nome,
             email: z.data.email,
             password: passwordHash

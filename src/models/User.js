@@ -23,9 +23,9 @@ User.hasMany(Task)
 Task.belongsTo(User)
 
 try {
-   User.sync({ force: true })
+   User.sync({ force: false })
         
 } catch (error) {
     console.error('Erro ao sincronizar banco:', error);
 }
-module.exports = User
+module.exports = {User,Task}

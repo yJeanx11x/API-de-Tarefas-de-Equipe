@@ -3,6 +3,8 @@ const User = require('../models/User')
 const validacao = require('../middlewares/validationMiddleware')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const { id } = require('zod/locales')
+const { where } = require('sequelize')
 
 
 // criar User
@@ -27,17 +29,15 @@ async function CriarUser(req, res, next) {
 
 }
 // login com jwt 
-
 async function login(req, res, next) {
     const { email, password } = req.body
-    
+
     try {
-        const contaExitente = await User.User.findOne({ where: { email } })
-        
-        if  (!contaExitente) {
+        const contaExitente = await User.User.findOne({ where: { email }})
+        if (!contaExitente) {
             return res.status(404).json({ message: 'E-mail inválido' })
         }
-        
+
         const Senhausuario = await bcrypt.compare(password, contaExitente.password)
         if (!Senhausuario) {
             return res.status(404).json({ message: 'Senha inválido' })
@@ -46,10 +46,11 @@ async function login(req, res, next) {
 
         const secret = process.env.SECRET
         const token = jwt.sign({
-            id: contaExitente._id
+            id: contaExitente.id,
+
         }, secret)
 
-        return res.status(200).json({ message: 'Login com sucesso', token })
+        return res.status(200).json({ message: 'Login com sucesso',id:contaExitente.id,token })
 
 
     } catch (error) {
@@ -57,5 +58,15 @@ async function login(req, res, next) {
     }
 
 }
+// verifica o token se e valido é cria a tarefa
 
-module.exports = { CriarUser, login }
+async function CriarTarefa(req, res, next) {
+    try {
+        return res.status(200).json({ message: 'Passou aqui' })
+    } catch (error) {
+        next(error)
+    }
+
+
+}
+module.exports = { CriarUser, login, CriarTarefa }

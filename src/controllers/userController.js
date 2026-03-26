@@ -1,10 +1,10 @@
 require('dotenv').config()
 const User = require('../models/User')
+const Task = require('../models/Task')
 const validacao = require('../middlewares/validationMiddleware')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const { id } = require('zod/locales')
-const { where } = require('sequelize')
+
 
 
 // criar User
@@ -33,7 +33,7 @@ async function login(req, res, next) {
     const { email, password } = req.body
 
     try {
-        const contaExitente = await User.User.findOne({ where: { email }})
+        const contaExitente = await User.User.findOne({ where: { email } })
         if (!contaExitente) {
             return res.status(404).json({ message: 'E-mail inválido' })
         }
@@ -50,7 +50,7 @@ async function login(req, res, next) {
 
         }, secret)
 
-        return res.status(200).json({ message: 'Login com sucesso',id:contaExitente.id,token })
+        return res.status(200).json({ message: 'Login com sucesso', id: contaExitente.id, token })
 
 
     } catch (error) {
@@ -62,7 +62,13 @@ async function login(req, res, next) {
 
 async function CriarTarefa(req, res, next) {
     try {
-        return res.status(200).json({ message: 'Passou aqui' })
+        const { titulo, descricao, status } = req.body
+        await Task.create({
+            titulo,
+            descricao,
+            status
+        })
+        return res.status(201).json({ message: 'Task Criada' })
     } catch (error) {
         next(error)
     }

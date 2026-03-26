@@ -24,6 +24,7 @@ Task.belongsTo(User)
 
 try {
    User.sync({ force: false })
+   Task.sync({ force: false })
         
 } catch (error) {
     console.error('Erro ao sincronizar banco:', error);

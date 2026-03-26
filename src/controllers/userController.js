@@ -4,8 +4,7 @@ const Task = require('../models/Task')
 const validacao = require('../middlewares/validationMiddleware')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const { where } = require('sequelize')
-const { id } = require('zod/locales')
+
 
 
 

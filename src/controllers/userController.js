@@ -1,7 +1,10 @@
 require('dotenv').config()
+
 const User = require('../models/User')
 const Task = require('../models/Task')
+
 const validacao = require('../middlewares/validationMiddleware')
+
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 

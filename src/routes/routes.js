@@ -7,5 +7,6 @@ const controllers = require('../controllers/userController')
 appRoutes.post('/auth/register', controllers.CriarUser)
 appRoutes.post('/auth/login', controllers.login)
 appRoutes.post('/tasks/:id', jwt.validacaJWT, controllers.CriarTarefa)
+appRoutes.get('/task', controllers.VerTarefas)
 
 module.exports = appRoutes

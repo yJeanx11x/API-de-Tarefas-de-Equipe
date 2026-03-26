@@ -4,6 +4,8 @@ const Task = require('../models/Task')
 const validacao = require('../middlewares/validationMiddleware')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const { where } = require('sequelize')
+const { id } = require('zod/locales')
 
 
 
@@ -59,10 +61,9 @@ async function login(req, res, next) {
 
 }
 // verifica o token se e valido é cria a tarefa
-
 async function CriarTarefa(req, res, next) {
+    const { titulo, descricao, status } = req.body
     try {
-        const { titulo, descricao, status } = req.body
         await Task.create({
             titulo,
             descricao,
@@ -75,4 +76,19 @@ async function CriarTarefa(req, res, next) {
 
 
 }
-module.exports = { CriarUser, login, CriarTarefa }
+// ver todas as tarefas
+async function VerTarefas(req, res, next) {
+
+    try {
+        const userTarefas = await Task.findAll({attributes: ['id','titulo', 'descricao']})
+        if(!userTarefas){
+            return res.status(401).json('Nenhuma tarefa encontrada')
+        }
+        return res.status(200).json({Task: userTarefas })
+    } catch (error) {
+next(error)
+    }
+}
+
+
+module.exports = { CriarUser, login, CriarTarefa, VerTarefas }

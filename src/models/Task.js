@@ -1,18 +1,22 @@
-const db=require('../config/database')
+const db = require('../config/database')
 
-const Task = db.Sequelize.define('tarefas', {
+const Task = db.sequelize.define('tarefas', {
     titulo: {
-        type: db.sequelize.STRING,
+        type: db.Sequelize.STRING,
         allowNull: false,
     },
     descricao: {
-        type: db.sequelize.STRING,
+        type: db.Sequelize.STRING,
         allowNull: false,
     },
     status: {
-        type: db.sequelize.BOOLEAN,
+        type: db.Sequelize.BOOLEAN,
+        allowNull: false,
+    },
+    UsuarioId: {
+        type: db.Sequelize.INTEGER,
         allowNull: false,
     }
 })
 
-module.exports= Task
+module.exports = Task

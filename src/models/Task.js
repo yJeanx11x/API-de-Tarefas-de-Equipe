@@ -13,10 +13,7 @@ const Task = db.sequelize.define('tarefas', {
         type: db.Sequelize.BOOLEAN,
         allowNull: false,
     },
-    UsuarioId: {
-        type: db.Sequelize.INTEGER,
-        allowNull: false,
-    }
+
 })
 
 module.exports = Task

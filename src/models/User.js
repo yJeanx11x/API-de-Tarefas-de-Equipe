@@ -20,11 +20,15 @@ const User = db.sequelize.define('Usuario', {
 })
 
 User.hasMany(Task, {
-    foreignKey: 'UsuarioId'
+  foreignKey: 'UsuarioId',
+  as: 'tasks'
 })
+
+
 Task.belongsTo(User, {
-    foreignKey: 'UsuarioId'
-})
+  foreignKey: 'UsuarioId',
+  as: 'user'
+}) 
 async function syncDatabase() {
     try {
         await User.sync({ force: false })
@@ -34,5 +38,7 @@ async function syncDatabase() {
         console.error('Erro ao sincronizar banco:', error);
     }
 }
+
+
 syncDatabase()
 module.exports = { User, Task }

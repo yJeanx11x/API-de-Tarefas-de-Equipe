@@ -7,8 +7,6 @@ const validacao = require('../middlewares/validationMiddleware')
 
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const { includes } = require('zod')
-const { where } = require('sequelize')
 
 
 // criar User
@@ -96,10 +94,9 @@ async function TarefaDoUser(req, res, next) {
     try {
         const TaskUser = await Task.findAll({ where: { UsuarioId: id }, attributes: ['id','titulo', 'descricao'] })
         const UserTarefa = await User.findOne({ where: { id }, attributes: ['nome'], includes: TaskUser })
-
-
-
-
+if(!TaskUser == 0){
+    return res.status(404).json({message:'Nenhuma tarefa encontrada'})
+}
         return res.status(200).json({ message: 'Sucesso', UserTarefa,TaskUser })
     } catch (error) {
         next(error)

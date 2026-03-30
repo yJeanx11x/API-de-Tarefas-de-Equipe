@@ -7,6 +7,9 @@ const validacao = require('../middlewares/validationMiddleware')
 
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const { includes } = require('zod')
+const { where } = require('sequelize')
+
 
 // criar User
 async function CriarUser(req, res, next) {
@@ -62,15 +65,27 @@ async function login(req, res, next) {
 // verifica o token se e valido é cria a tarefa
 async function CriarTarefa(req, res, next) {
     const { titulo, descricao, status } = req.body
-    const {id}=req.params
+    const { id } = req.params
     try {
- await Task.create({
-    titulo: 'Estudar',
-    descricao: 'Nodejs',
-    status: false,
-    UsuarioId: id
-})
+        await Task.create({
+            titulo,
+            descricao,
+            status,
+            UsuarioId: id
+        })
         return res.status(201).json({ message: 'Task Criada' })
+    } catch (error) {
+        next(error)
+    }
+}
+// ver todas as tarefas
+async function VerTarefas(req, res, next) {
+    try {
+        const userTarefas = await Task.findAll({ attributes: ['id', 'titulo', 'descricao'] })
+        if (!userTarefas) {
+            return res.status(401).json('Nenhuma tarefa encontrada')
+        }
+        return res.status(200).json({ Task: userTarefas })
     } catch (error) {
         next(error)
     }
@@ -79,22 +94,13 @@ async function CriarTarefa(req, res, next) {
 async function TarefaDoUser(req, res, next) {
     const { id } = req.params
     try {
-        const UserTarefa = await User.findOne({where: { id }, include: [{model: Task}], attributes: ['nome']})
-        
+        const TaskUser = await Task.findAll({ where: { UsuarioId: id }, attributes: ['id','titulo', 'descricao'] })
+        const UserTarefa = await User.findOne({ where: { id }, attributes: ['nome'], includes: TaskUser })
 
-        return res.status(200).json({ message: 'Sucesso', UserTarefa })
-    } catch (error) {
-        next(error)
-    }
-}
-// ver todas as tarefas
-async function VerTarefas(req, res, next) {
-    try {
-        const userTarefas = await Task.findAll({ attributes: ['id', 'titulo', 'descricao', 'UsuarioId'] })
-        if (!userTarefas) {
-            return res.status(401).json('Nenhuma tarefa encontrada')
-        }
-        return res.status(200).json({ Task: userTarefas })
+
+
+
+        return res.status(200).json({ message: 'Sucesso', UserTarefa,TaskUser })
     } catch (error) {
         next(error)
     }

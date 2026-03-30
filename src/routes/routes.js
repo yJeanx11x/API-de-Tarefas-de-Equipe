@@ -8,6 +8,6 @@ appRoutes.post('/auth/register', controllers.CriarUser)
 appRoutes.post('/auth/login', controllers.login)
 appRoutes.post('/tasks/:id', jwt.validacaJWT, controllers.CriarTarefa)
 appRoutes.get('/task', controllers.VerTarefas)
-appRoutes.get('/task/:id',controllers.TarefaDoUser)
+appRoutes.get('/task/:id', jwt.validacaJWT, controllers.TarefaDoUser)
 
 module.exports = appRoutes

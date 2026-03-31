@@ -88,21 +88,35 @@ async function VerTarefas(req, res, next) {
         next(error)
     }
 }
-
+// ver as tarefas de um user especifico
 async function TarefaDoUser(req, res, next) {
     const { id } = req.params
     try {
-        const TaskUser = await Task.findAll({ where: { UsuarioId: id }, attributes: ['id','titulo', 'descricao'] })
+        const TaskUser = await Task.findAll({ where: { UsuarioId: id }, attributes: ['id', 'titulo', 'descricao'] })
         const UserTarefa = await User.findOne({ where: { id }, attributes: ['nome'], includes: TaskUser })
-if(!TaskUser == 0){
-    return res.status(404).json({message:'Nenhuma tarefa encontrada'})
-}
-        return res.status(200).json({ message: 'Sucesso', UserTarefa,TaskUser })
+        return res.status(200).json({ message: 'Sucesso', UserTarefa, TaskUser })
     } catch (error) {
         next(error)
     }
 }
+// atualizar tarefa
+async function AtulizarTarefa(req, res, next) {
+    const { id } = req.params
+    const { titulo, descricao, status } = req.body
+    try {
+        const TaskUser = await Task.findOne({ where: { id }, attributes: ['id', 'titulo', 'descricao'] })
+        const UserTarefa = await User.findOne({ where: { id }, attributes: ['nome'], includes: TaskUser })
+        await TaskUser.update({
+            titulo,
+            descricao,
+            status
+        })
+        return res.status(200).json({ message: 'Atualizado com sucesso', UserTarefa, TaskUser })
+    } catch (error) {
+        next(error)
+    }
 
 
+}
 
-module.exports = { CriarUser, login, CriarTarefa, VerTarefas, TarefaDoUser }
+module.exports = { CriarUser, login, CriarTarefa, VerTarefas, TarefaDoUser, AtulizarTarefa }

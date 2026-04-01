@@ -10,5 +10,6 @@ appRoutes.post('/tasks/:id', jwt.validacaJWT, controllers.CriarTarefa)
 appRoutes.get('/task', controllers.VerTarefas)
 appRoutes.get('/task/:id', jwt.validacaJWT, controllers.TarefaDoUser)
 appRoutes.patch('/task/:id',jwt.validacaJWT,controllers.AtulizarTarefa)
+appRoutes.delete('/task/:id',jwt.validacaJWT,controllers.DeletarTarefa)
 
 module.exports = appRoutes

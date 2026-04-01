@@ -118,5 +118,24 @@ async function AtulizarTarefa(req, res, next) {
 
 
 }
+// deletar tarefa
+async function DeletarTarefa(req, res, next) { 
+const {id}=req.params
+try {
+    const TaskUser = await Task.findOne({ where: { id, }, attributes: ['id', 'titulo', 'descricao'] })
+    if(!TaskUser){
+        return res.status(404).json({message:'Nenhuma tarefa encontrada'})
+    }
+   await TaskUser.destroy()
+   return res.status(200).json({message:'Tarefa deletada'})
+    
 
-module.exports = { CriarUser, login, CriarTarefa, VerTarefas, TarefaDoUser, AtulizarTarefa }
+} catch (error) {
+    next(error)
+}
+
+ }
+
+
+// exportando as funções para serem usadas nas rotas
+module.exports = { CriarUser, login, CriarTarefa, VerTarefas, TarefaDoUser, AtulizarTarefa,DeletarTarefa }

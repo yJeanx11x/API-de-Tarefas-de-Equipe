@@ -37,12 +37,12 @@ async function login(req, res, next) {
     try {
         const contaExitente = await User.findOne({ where: { email } })
         if (!contaExitente) {
-            return res.status(404).json({ message: 'E-mail inválido' })
+            return res.status(401).json({ message: 'E-mail inválido' })
         }
 
         const Senhausuario = await bcrypt.compare(password, contaExitente.password)
         if (!Senhausuario) {
-            return res.status(404).json({ message: 'Senha inválido' })
+            return res.status(401).json({ message: 'Senha inválido' })
 
         }
 
@@ -63,13 +63,13 @@ async function login(req, res, next) {
 // verifica o token se e valido é cria a tarefa
 async function CriarTarefa(req, res, next) {
     const { titulo, descricao, status } = req.body
-    const { id } = req.params
+    // const { id } = req.params
     try {
         await Task.create({
             titulo,
             descricao,
             status,
-            UsuarioId: id
+            UsuarioId: req.User.id
         })
         return res.status(201).json({ message: 'Task Criada' })
     } catch (error) {
@@ -92,7 +92,7 @@ async function VerTarefas(req, res, next) {
 async function TarefaDoUser(req, res, next) {
     const { id } = req.params
     try {
-        const TaskUser = await Task.findAll({ where: { UsuarioId: id }, attributes: ['id', 'titulo', 'descricao'] })
+        const TaskUser = await Task.findAll({ where: { UsuarioId: req.User.id }, attributes: ['id', 'titulo', 'descricao'] })
         const UserTarefa = await User.findOne({ where: { id }, attributes: ['nome'], includes: TaskUser })
         return res.status(200).json({ message: 'Sucesso', UserTarefa, TaskUser })
     } catch (error) {
@@ -104,7 +104,7 @@ async function AtulizarTarefa(req, res, next) {
     const { id } = req.params
     const { titulo, descricao, status } = req.body
     try {
-        const TaskUser = await Task.findOne({ where: { id }, attributes: ['id', 'titulo', 'descricao'] })
+        const TaskUser = await Task.findOne({ where: { UsuarioId: req.User.id }, attributes: ['id', 'titulo', 'descricao'] })
         const UserTarefa = await User.findOne({ where: { id }, attributes: ['nome'], includes: TaskUser })
         await TaskUser.update({
             titulo,
@@ -119,23 +119,23 @@ async function AtulizarTarefa(req, res, next) {
 
 }
 // deletar tarefa
-async function DeletarTarefa(req, res, next) { 
-const {id}=req.params
-try {
-    const TaskUser = await Task.findOne({ where: { id, }, attributes: ['id', 'titulo', 'descricao'] })
-    if(!TaskUser){
-        return res.status(404).json({message:'Nenhuma tarefa encontrada'})
+async function DeletarTarefa(req, res, next) {
+    const { id } = req.params
+    try {
+        const TaskUser = await Task.findOne({ where: { id, UsuarioId: req.User.id }, attributes: ['id', 'titulo', 'descricao'] })
+        if (!TaskUser) {
+            return res.status(404).json({ message: 'Nenhuma tarefa encontrada' })
+        }
+        await TaskUser.destroy()
+        return res.status(200).json({ message: 'Tarefa deletada' })
+
+
+    } catch (error) {
+        next(error)
     }
-   await TaskUser.destroy()
-   return res.status(200).json({message:'Tarefa deletada'})
-    
 
-} catch (error) {
-    next(error)
 }
-
- }
 
 
 // exportando as funções para serem usadas nas rotas
-module.exports = { CriarUser, login, CriarTarefa, VerTarefas, TarefaDoUser, AtulizarTarefa,DeletarTarefa }
+module.exports = { CriarUser, login, CriarTarefa, VerTarefas, TarefaDoUser, AtulizarTarefa, DeletarTarefa }

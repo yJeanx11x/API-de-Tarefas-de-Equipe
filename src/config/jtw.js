@@ -9,7 +9,8 @@ async function validacaJWT(req, res, next) {
     }
     try {
         const secret = process.env.SECRET
-        jwt.verify(token, secret)
+       const decoded = jwt.verify(token, secret)
+       req.User = decoded
         next()
     } catch (error) {
         return res.status(500).json({ message: 'Token inválido!' })
